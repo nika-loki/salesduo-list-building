@@ -23,7 +23,7 @@ A Next.js application for collecting and managing custom list building quote req
 
 ## Prerequisites
 
-- Node.js 18+ and npm
+- Bun v1.2+ (or Node.js 18+)
 - Notion account with integration access
 - Telegram bot (via @BotFather)
 - Resend account with verified domain
@@ -33,7 +33,7 @@ A Next.js application for collecting and managing custom list building quote req
 ### 1. Installation
 
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Environment Configuration
@@ -75,7 +75,7 @@ Follow the detailed setup guides:
 ### 4. Run Development Server
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
@@ -109,13 +109,13 @@ src/
 
 ```bash
 # Development
-npm run dev              # Start dev server with Turbopack
-npm run build           # Create production build
-npm run start           # Start production server
+bun run dev              # Start dev server with Turbopack
+bun run build           # Create production build
+bun run start           # Start production server
 
 # Testing
-node test-integration.js       # Test Notion + Telegram integration
-node test-email-integration.js # Test complete workflow with email
+bun test-integration.js       # Test Notion + Telegram integration
+bun test-email-integration.js # Test complete workflow with email
 ```
 
 ## Form Workflow
@@ -194,10 +194,10 @@ Run the integration test suite:
 
 ```bash
 # Test Notion + Telegram
-node test-integration.js
+bun test-integration.js
 
 # Test complete workflow with email
-node test-email-integration.js
+bun test-email-integration.js
 ```
 
 Follow the [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) for comprehensive testing.
