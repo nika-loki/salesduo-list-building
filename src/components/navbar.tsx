@@ -1,55 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, UserSearch, MessageCircleHeart, ChevronDown } from "lucide-react";
-
-const ROLE_STORAGE_KEY = "salesduo-user-role";
-
-const roleOptions = [
-  {
-    role: "Lead Generation Agency",
-    description: "Build lead lists for your clients efficiently",
-    icon: Building2,
-  },
-  {
-    role: "Recruitment Agency",
-    description: "Build candidate lists efficiently",
-    icon: UserSearch,
-  },
-  {
-    role: "B2B Marketing Leader",
-    description: "Build campaigns faster with quality target lists",
-    icon: MessageCircleHeart,
-  },
-];
+import { ChevronDown } from "lucide-react";
+import { useUserRole } from "@/hooks/use-user-role";
+import { roleOptions, getRoleArticle } from "@/types/roles";
 
 export function Navbar() {
-  const [selectedRole, setSelectedRole] = useState<string>("");
-  const [showRoleModal, setShowRoleModal] = useState(false);
+  const { selectedRole, showRoleModal, setShowRoleModal, updateRole } = useUserRole();
   const [showLogo, setShowLogo] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   // Determine article based on selected role
-  const article = selectedRole === "Agency Owner" ? "an" : "a";
-
-  // Check localStorage for saved role on mount
-  useEffect(() => {
-    const savedRole = localStorage.getItem(ROLE_STORAGE_KEY);
-    if (savedRole) {
-      setSelectedRole(savedRole);
-    } else {
-      setShowRoleModal(true);
-    }
-  }, []);
-
-  // Handle role selection
-  const handleRoleSelect = (role: string) => {
-    setSelectedRole(role);
-    localStorage.setItem(ROLE_STORAGE_KEY, role);
-    setShowRoleModal(false);
-  };
+  const article = selectedRole ? getRoleArticle(selectedRole) : "a";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -113,11 +77,11 @@ export function Navbar() {
               <span className="text-text-secondary">I'm {article}</span>
               <div className="inline-block relative">
                 <select
-                  value={selectedRole}
-                  onChange={(e) => handleRoleSelect(e.target.value)}
+                  value={selectedRole || ""}
+                  onChange={(e) => updateRole(e.target.value as any)}
                   className="p-0 m-0 pr-4 bg-transparent border-0 border-b border-dashed border-text-muted text-text-secondary hover:text-text-primary appearance-none cursor-pointer hover:border-accent transition-colors focus:outline-none focus:border-accent min-w-0"
                   style={{
-                    width: `${selectedRole.length + 2}ch`,
+                    width: `${(selectedRole?.length || 10) + 2}ch`,
                   }}
                 >
                   {roleOptions.map((option) => (
@@ -174,7 +138,7 @@ export function Navbar() {
               {roleOptions.map((option) => (
                 <button
                   key={option.role}
-                  onClick={() => handleRoleSelect(option.role)}
+                  onClick={() => updateRole(option.role)}
                   className="flex items-center gap-4 p-4 bg-surface border-2 border-border rounded-lg hover:border-accent hover:bg-background transition-all text-left group"
                 >
                   <div className="flex-shrink-0">
