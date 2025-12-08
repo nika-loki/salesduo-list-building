@@ -117,6 +117,11 @@ export function ColumnBuilder({ columns, onChange, showValidation }: ColumnBuild
     field: keyof ColumnDefinition,
     value: string
   ) => {
+    // Enforce character limit on description field
+    if (field === 'description' && value.length > 500) {
+      return; // Don't update if exceeds limit
+    }
+
     onChange(
       columns.map((col) =>
         col.id === id ? { ...col, [field]: value } : col
@@ -252,23 +257,35 @@ export function ColumnBuilder({ columns, onChange, showValidation }: ColumnBuild
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <textarea
-                      value={column.description || ''}
-                      onChange={(e) =>
-                        updateColumn(column.id, 'description', e.target.value)
-                      }
-                      placeholder="Optional context"
-                      rows={1}
-                      className="w-full px-3 py-2 bg-surface border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-text-primary text-sm resize-none overflow-hidden"
-                      style={{
-                        minHeight: '2.5rem',
-                      }}
-                      onInput={(e) => {
-                        const target = e.target as HTMLTextAreaElement;
-                        target.style.height = 'auto';
-                        target.style.height = target.scrollHeight + 'px';
-                      }}
-                    />
+                    <div className="space-y-1">
+                      <textarea
+                        value={column.description || ''}
+                        onChange={(e) =>
+                          updateColumn(column.id, 'description', e.target.value)
+                        }
+                        placeholder="Optional context"
+                        maxLength={500}
+                        rows={1}
+                        className="w-full px-3 py-2 bg-surface border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-text-primary text-sm resize-none overflow-hidden"
+                        style={{
+                          minHeight: '2.5rem',
+                        }}
+                        onInput={(e) => {
+                          const target = e.target as HTMLTextAreaElement;
+                          target.style.height = 'auto';
+                          target.style.height = target.scrollHeight + 'px';
+                        }}
+                      />
+                      {column.description && column.description.length > 0 && (
+                        <p className={`text-xs font-medium text-right ${
+                          column.description.length > 450
+                            ? 'text-yellow-500'
+                            : 'text-text-muted'
+                        }`}>
+                          {column.description.length}/500
+                        </p>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <button

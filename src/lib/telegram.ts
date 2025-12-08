@@ -8,7 +8,7 @@ export interface TelegramMessageData {
   inputMethod: 'video' | 'text';
   columnsFormatted: string;
   columnCount: number;
-  notionUrl: string;
+  notionUrl?: string;
 }
 
 /**
@@ -60,6 +60,10 @@ export async function sendTelegramNotification(
     }
 
     // Build the formatted message
+    const notionLink = data.notionUrl
+      ? `🔗 [View in Notion](${data.notionUrl})`
+      : '⚠️ *Notion entry pending - check database manually*';
+
     const message = `
 🎯 *NEW QUOTE REQUEST* #${data.submissionId}
 
@@ -80,7 +84,7 @@ ${inputDetails}
 
 ⏰ *Submitted:* ${timestamp} SGT
 
-🔗 [View in Notion](${data.notionUrl})
+${notionLink}
 
 ━━━━━━━━━━━━━━━━━━━━
 ⚡ *Action Required:* Review and send quote within 2 hours

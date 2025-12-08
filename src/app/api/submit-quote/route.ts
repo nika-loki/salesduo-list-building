@@ -92,6 +92,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate column descriptions don't exceed character limit
+    if (columns.some((col) => col.description && col.description.length > 500)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Column descriptions must be under 500 characters',
+        },
+        { status: 400 }
+      );
+    }
+
     // Validate input method requirements
     if (inputMethod === 'video' && !videoUrl.trim()) {
       return NextResponse.json(
@@ -129,22 +140,39 @@ export async function POST(req: NextRequest) {
       })
       .join('\n');
 
-    // Step 5: Create Notion entry
+    // Step 5: Create Notion entry (best-effort, non-blocking)
     console.log(`Creating Notion entry for submission ${submissionId}...`);
+    let notionResponse = null;
+    let notionError = null;
 
-    const notionResponse = await createNotionEntry({
-      submissionId,
-      name,
-      email,
-      company,
-      videoUrl: videoUrl || undefined,
-      textPrompt: textPrompt || undefined,
-      inputMethod,
-      columns: columnsFormatted,
-      columnCount: columns.length,
-    });
+    try {
+      // Truncate textPrompt as safety net (should be caught by frontend validation)
+      const safeTextPrompt = textPrompt && textPrompt.length > 2000
+        ? textPrompt.substring(0, 1997) + '...'
+        : textPrompt;
 
-    console.log(`Notion entry created successfully: ${notionResponse.url}`);
+      notionResponse = await createNotionEntry({
+        submissionId,
+        name,
+        email,
+        company,
+        videoUrl: videoUrl || undefined,
+        textPrompt: safeTextPrompt || undefined,
+        inputMethod,
+        columns: columnsFormatted,
+        columnCount: columns.length,
+      });
+
+      console.log(`✅ Notion entry created successfully: ${notionResponse.url}`);
+    } catch (error) {
+      notionError = error as Error;
+      console.error('⚠️  Failed to create Notion entry:', error);
+      console.error('Submission will proceed, but manual Notion entry may be needed.');
+      console.error(`Submission details: ${JSON.stringify({ submissionId, name, email, company })}`);
+
+      // TODO: Add to retry queue or alert monitoring system
+      // For now, we log the error and continue with email/Telegram
+    }
 
     // Step 6: Send confirmation email to user (best-effort, non-blocking)
     console.log('Sending confirmation email to user...');
@@ -182,15 +210,19 @@ export async function POST(req: NextRequest) {
       inputMethod,
       columnsFormatted,
       columnCount: columns.length,
-      notionUrl: notionResponse.url,
+      notionUrl: notionResponse?.url || undefined,
     });
 
     // Step 8: Return success response
     return NextResponse.json({
       success: true,
       submissionId,
-      notionUrl: notionResponse.url,
+      notionUrl: notionResponse?.url || undefined,
       message: 'Quote request submitted successfully',
+      // Optional: inform user if Notion sync pending
+      warning: notionError
+        ? 'Submission recorded. Our team will review it shortly.'
+        : undefined,
     });
   } catch (error) {
     // Log detailed error for debugging

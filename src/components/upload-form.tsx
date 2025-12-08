@@ -368,7 +368,13 @@ export function UploadForm() {
             </label>
             <textarea
               id="textPrompt"
-              {...register('textPrompt')}
+              {...register('textPrompt', {
+                maxLength: {
+                  value: 2000,
+                  message: 'Description must be under 2000 characters'
+                }
+              })}
+              maxLength={2000}
               rows={12}
               className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-text-primary resize-none"
               placeholder={`Describe the leads you want to find. For example:
@@ -386,9 +392,21 @@ Be specific about:
 - Recent activities (funding, hiring, news, etc.)
 - Any other qualification criteria`}
             />
-            <p className="text-xs text-text-muted mt-2">
-              The more detailed you are, the better we can match your exact requirements.
-            </p>
+            <div className="flex items-center justify-between mt-2">
+              <p className="text-xs text-text-muted">
+                The more detailed you are, the better we can match your exact requirements.
+              </p>
+              <p className={`text-xs font-medium ${
+                (watch('textPrompt')?.length || 0) > 1900
+                  ? 'text-yellow-500'
+                  : 'text-text-muted'
+              }`}>
+                {watch('textPrompt')?.length || 0}/2000 characters
+              </p>
+            </div>
+            {errors.textPrompt && (
+              <p className="text-xs text-red-500 mt-1">{errors.textPrompt.message}</p>
+            )}
           </div>
         )}
       </div>
