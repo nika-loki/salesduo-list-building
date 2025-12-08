@@ -30,11 +30,16 @@ const costScenarios: CostScenario[] = [
       { field: "Company Name", pricingType: "free", creditsPerRow: 0 },
       { field: "Contact Name", pricingType: "free", creditsPerRow: 0 },
       { field: "Title", pricingType: "free", creditsPerRow: 0 },
-      { field: "Email", pricingType: "per-run", creditsPerRow: 1 },
+      {
+        field: "Email",
+        pricingType: "only-if-found",
+        creditsPerRow: 1,
+        successRate: 0.85,
+      },
       {
         field: "Phone",
         pricingType: "only-if-found",
-        creditsPerRow: 2,
+        creditsPerRow: 10,
         successRate: 0.75,
       },
       { field: "LinkedIn URL", pricingType: "free", creditsPerRow: 0 },
@@ -56,12 +61,11 @@ const costScenarios: CostScenario[] = [
       { field: "Company Name", pricingType: "free", creditsPerRow: 0 },
       { field: "Contact Name", pricingType: "free", creditsPerRow: 0 },
       { field: "Title", pricingType: "free", creditsPerRow: 0 },
-      { field: "Email", pricingType: "per-run", creditsPerRow: 1 },
       {
-        field: "Phone",
+        field: "Email",
         pricingType: "only-if-found",
-        creditsPerRow: 2,
-        successRate: 0.7,
+        creditsPerRow: 1,
+        successRate: 0.85,
       },
       { field: "LinkedIn URL", pricingType: "free", creditsPerRow: 0 },
       { field: "Company Website", pricingType: "free", creditsPerRow: 0 },
@@ -87,12 +91,11 @@ const costScenarios: CostScenario[] = [
       { field: "Company Name", pricingType: "free", creditsPerRow: 0 },
       { field: "Contact Name", pricingType: "free", creditsPerRow: 0 },
       { field: "Title", pricingType: "free", creditsPerRow: 0 },
-      { field: "Email", pricingType: "per-run", creditsPerRow: 1 },
       {
-        field: "Phone",
+        field: "Email",
         pricingType: "only-if-found",
-        creditsPerRow: 2,
-        successRate: 0.65,
+        creditsPerRow: 1,
+        successRate: 0.85,
       },
       { field: "LinkedIn URL", pricingType: "free", creditsPerRow: 0 },
       { field: "Company Website", pricingType: "free", creditsPerRow: 0 },
@@ -136,6 +139,7 @@ export function CostBreakdown({ perCredit }: Props) {
 
   const totalCredits = calculateTotalCredits(activeScenario);
   const totalCost = totalCredits * perCredit;
+  const costPerRow = totalCost / activeScenario.sampleRows;
 
   // Group fields by pricing type
   const freeFields = activeScenario.fields.filter(
@@ -304,11 +308,15 @@ export function CostBreakdown({ perCredit }: Props) {
             {/* Dollar Cost Row */}
             <div className="grid grid-cols-12 gap-4 p-4 bg-accent/10 border-t border-border">
               <div className="col-span-10 text-text-secondary text-sm">
-                At ${perCredit.toFixed(4)} per credit (from your selected
-                package above)
+                At ${perCredit.toFixed(4)} per credit (from your selected package above)
               </div>
-              <div className="col-span-2 text-right text-xl font-bold text-accent">
-                ${totalCost.toFixed(2)}
+              <div className="col-span-2 text-right">
+                <div className="text-xl font-bold text-accent">
+                  ${totalCost.toFixed(2)}
+                </div>
+                <div className="text-xs text-text-muted mt-1">
+                  ${costPerRow.toFixed(2)} per row
+                </div>
               </div>
             </div>
           </div>

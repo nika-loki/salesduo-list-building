@@ -32,7 +32,7 @@ export function Hero({ ctaVariant = "quote", onCTAClick }: HeroProps) {
           </h1>
 
           {/* Subheadline */}
-          <p className="mb-6 text-lg md:text-xl text-text-secondary max-w-3xl mx-auto text-balance leading-relaxed">
+          <p className="mb-6 text-lg md:text-xl text-text-secondary max-w-4xl mx-auto text-balance leading-relaxed">
             Film a quick video of your list building process. Get a quote with
             sample data. Receive your complete dataset within 24-48 hours.
           </p>

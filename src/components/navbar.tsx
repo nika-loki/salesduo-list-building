@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, UserSearch, MessageCircleHeart } from "lucide-react";
+import { Building2, UserSearch, MessageCircleHeart, ChevronDown } from "lucide-react";
 
 const ROLE_STORAGE_KEY = "salesduo-user-role";
 
@@ -115,9 +115,9 @@ export function Navbar() {
                 <select
                   value={selectedRole}
                   onChange={(e) => handleRoleSelect(e.target.value)}
-                  className="p-0 m-0 bg-transparent border-0 border-b border-dashed border-text-muted text-text-secondary hover:text-text-primary appearance-none cursor-pointer hover:border-accent transition-colors focus:outline-none focus:border-accent min-w-0"
+                  className="p-0 m-0 pr-4 bg-transparent border-0 border-b border-dashed border-text-muted text-text-secondary hover:text-text-primary appearance-none cursor-pointer hover:border-accent transition-colors focus:outline-none focus:border-accent min-w-0"
                   style={{
-                    width: `${selectedRole.length}ch`,
+                    width: `${selectedRole.length + 2}ch`,
                   }}
                 >
                   {roleOptions.map((option) => (
@@ -126,6 +126,7 @@ export function Navbar() {
                     </option>
                   ))}
                 </select>
+                <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 text-text-muted pointer-events-none" />
               </div>
             </div>
           </div>
