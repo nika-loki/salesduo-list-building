@@ -3,17 +3,15 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
 import { useUserRole } from "@/hooks/use-user-role";
-import { roleOptions, getRoleArticle } from "@/types/roles";
+import { RoleSelectionModal } from "./navbar/role-selection-modal";
+import { RoleSelector } from "./navbar/role-selector";
+import { NavLinks } from "./navbar/nav-links";
 
 export function Navbar() {
-  const { selectedRole, showRoleModal, setShowRoleModal, updateRole } = useUserRole();
+  const { selectedRole, showRoleModal, updateRole } = useUserRole();
   const [showLogo, setShowLogo] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-
-  // Determine article based on selected role
-  const article = selectedRole ? getRoleArticle(selectedRole) : "a";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,101 +65,18 @@ export function Navbar() {
         </div>
 
         {/* Center: Role Selector with smooth position transition */}
-        {selectedRole && (
-          <div
-            className={`absolute left-1/2 -translate-x-1/2 transition-all duration-300 ${
-              showLogo ? "" : "!left-6 !translate-x-0"
-            }`}
-          >
-            <div className="flex items-center gap-2 text-sm opacity-50">
-              <span className="text-text-secondary">I'm {article}</span>
-              <div className="inline-block relative">
-                <select
-                  value={selectedRole || ""}
-                  onChange={(e) => updateRole(e.target.value as any)}
-                  className="p-0 m-0 pr-4 bg-transparent border-0 border-b border-dashed border-text-muted text-text-secondary hover:text-text-primary appearance-none cursor-pointer hover:border-accent transition-colors focus:outline-none focus:border-accent min-w-0"
-                  style={{
-                    width: `${(selectedRole?.length || 10) + 2}ch`,
-                  }}
-                >
-                  {roleOptions.map((option) => (
-                    <option key={option.role} value={option.role}>
-                      {option.role}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 text-text-muted pointer-events-none" />
-              </div>
-            </div>
-          </div>
-        )}
+        <RoleSelector
+          selectedRole={selectedRole}
+          onRoleChange={updateRole}
+          showLogo={showLogo}
+        />
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-6">
-          <a
-            href="#pricing"
-            className="text-sm text-text-secondary hover:text-text-primary transition-colors"
-          >
-            Pricing
-          </a>
-          <a
-            href="#examples"
-            className="text-sm text-text-secondary hover:text-text-primary transition-colors"
-          >
-            Examples
-          </a>
-
-          {/* CTA Button */}
-          <Link
-            href="/upload"
-            className="px-4 py-1.5 bg-cta text-white rounded-lg font-medium hover:bg-cta-hover transition-colors text-sm"
-          >
-            Start Free →
-          </Link>
-        </div>
+        <NavLinks />
       </div>
 
       {/* Role Selection Modal */}
-      {showRoleModal && (
-        <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-[100] flex items-center justify-center">
-          <div className="max-w-2xl w-full mx-4">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-text-primary mb-4">
-                Welcome to SalesDuo
-              </h2>
-              <p className="text-lg text-text-secondary">
-                Tell us about yourself to get started
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 max-w-lg mx-auto">
-              {roleOptions.map((option) => (
-                <button
-                  key={option.role}
-                  onClick={() => updateRole(option.role)}
-                  className="flex items-center gap-4 p-4 bg-surface border-2 border-border rounded-lg hover:border-accent hover:bg-background transition-all text-left group"
-                >
-                  <div className="flex-shrink-0">
-                    <option.icon className="w-6 h-6 text-text-muted group-hover:text-accent transition-colors" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-lg font-semibold text-text-primary mb-1 group-hover:text-accent transition-colors">
-                      {option.role}
-                    </div>
-                    <div className="text-sm text-text-muted">
-                      {option.description}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <p className="text-center text-sm text-text-muted mt-8">
-              You can change this anytime from the navbar
-            </p>
-          </div>
-        </div>
-      )}
+      <RoleSelectionModal isOpen={showRoleModal} onRoleSelect={updateRole} />
     </nav>
   );
 }
