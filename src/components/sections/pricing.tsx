@@ -8,13 +8,10 @@ import { CostBreakdown } from "./cost-breakdown";
 
 // Credit bundle pricing - base prices
 const bundles = [
-  { credits: 10000, price: 300, perCredit: 0.03, expiry: 1 },
-  { credits: 40000, price: 1000, perCredit: 0.025, expiry: 2 },
-  { credits: 70000, price: 1500, perCredit: 0.0214, expiry: 3 },
-  { credits: 150000, price: 3000, perCredit: 0.02, expiry: 6, popular: true },
-  { credits: 300000, price: 5000, perCredit: 0.0167, expiry: 6 },
-  { credits: 500000, price: 8000, perCredit: 0.016, expiry: 8 },
-  { credits: 1000000, price: 14000, perCredit: 0.014, expiry: 12 },
+  { credits: 1000, price: 300, perCredit: 0.30, expiry: 1 },
+  { credits: 3500, price: 1000, perCredit: 0.2857, expiry: 3 },
+  { credits: 10000, price: 2500, perCredit: 0.25, expiry: 6, popular: true },
+  { credits: 22500, price: 5000, perCredit: 0.2222, expiry: 12 },
 ];
 
 // Calculate price based on credits
@@ -25,27 +22,18 @@ function calculatePrice(
   let basePrice = 0;
   let basePerCredit = 0;
 
-  if (credits >= 1000000) {
-    basePrice = credits * 0.014;
-    basePerCredit = 0.014;
-  } else if (credits >= 500000) {
-    basePrice = credits * 0.016;
-    basePerCredit = 0.016;
-  } else if (credits >= 300000) {
-    basePrice = credits * 0.0167;
-    basePerCredit = 0.0167;
-  } else if (credits >= 150000) {
-    basePrice = credits * 0.02;
-    basePerCredit = 0.02;
-  } else if (credits >= 70000) {
-    basePrice = credits * 0.0214;
-    basePerCredit = 0.0214;
-  } else if (credits >= 40000) {
-    basePrice = credits * 0.025;
-    basePerCredit = 0.025;
+  if (credits >= 22500) {
+    basePrice = credits * 0.2222;
+    basePerCredit = 0.2222;
+  } else if (credits >= 10000) {
+    basePrice = credits * 0.25;
+    basePerCredit = 0.25;
+  } else if (credits >= 3500) {
+    basePrice = credits * 0.2857;
+    basePerCredit = 0.2857;
   } else {
-    basePrice = credits * 0.03;
-    basePerCredit = 0.03;
+    basePrice = credits * 0.30;
+    basePerCredit = 0.30;
   }
 
   // Apply 15% premium for lifetime
@@ -59,11 +47,9 @@ function calculatePrice(
 
 // Calculate expiry based on credit amount
 function calculateExpiry(credits: number): number {
-  if (credits >= 1000000) return 12;
-  if (credits >= 500000) return 8;
-  if (credits >= 150000) return 6;
-  if (credits >= 70000) return 3;
-  if (credits >= 40000) return 2;
+  if (credits >= 22500) return 12;
+  if (credits >= 10000) return 6;
+  if (credits >= 3500) return 3;
   return 1;
 }
 
@@ -248,9 +234,9 @@ export function Pricing() {
                   {/* Slider */}
                   <input
                     type="range"
-                    min="10000"
-                    max="1000000"
-                    step="10000"
+                    min="1000"
+                    max="22500"
+                    step="100"
                     value={selectedCredits}
                     onChange={handleSliderChange}
                     className="w-full h-2 bg-border rounded-lg appearance-none cursor-pointer accent-accent mb-8"
