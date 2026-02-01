@@ -8,10 +8,10 @@ import { CostBreakdown } from "./cost-breakdown";
 
 // Credit bundle pricing - base prices
 const bundles = [
-  { credits: 1000, price: 300, perCredit: 0.30, expiry: 1 },
-  { credits: 3500, price: 1000, perCredit: 0.2857, expiry: 3 },
-  { credits: 10000, price: 2500, perCredit: 0.25, expiry: 6, popular: true },
-  { credits: 22500, price: 5000, perCredit: 0.2222, expiry: 12 },
+  { credits: 10000, price: 300, perCredit: 0.03, expiry: 1 },
+  { credits: 35000, price: 1000, perCredit: 0.02857, expiry: 3 },
+  { credits: 100000, price: 2500, perCredit: 0.025, expiry: 6, popular: true },
+  { credits: 225000, price: 5000, perCredit: 0.02222, expiry: 12 },
 ];
 
 // Calculate price based on credits
@@ -22,18 +22,18 @@ function calculatePrice(
   let basePrice = 0;
   let basePerCredit = 0;
 
-  if (credits >= 22500) {
-    basePrice = credits * 0.2222;
-    basePerCredit = 0.2222;
-  } else if (credits >= 10000) {
-    basePrice = credits * 0.25;
-    basePerCredit = 0.25;
-  } else if (credits >= 3500) {
-    basePrice = credits * 0.2857;
-    basePerCredit = 0.2857;
+  if (credits >= 225000) {
+    basePrice = credits * 0.02222;
+    basePerCredit = 0.02222;
+  } else if (credits >= 100000) {
+    basePrice = credits * 0.025;
+    basePerCredit = 0.025;
+  } else if (credits >= 35000) {
+    basePrice = credits * 0.02857;
+    basePerCredit = 0.02857;
   } else {
-    basePrice = credits * 0.30;
-    basePerCredit = 0.30;
+    basePrice = credits * 0.03;
+    basePerCredit = 0.03;
   }
 
   // Apply 15% premium for lifetime
@@ -47,9 +47,9 @@ function calculatePrice(
 
 // Calculate expiry based on credit amount
 function calculateExpiry(credits: number): number {
-  if (credits >= 22500) return 12;
-  if (credits >= 10000) return 6;
-  if (credits >= 3500) return 3;
+  if (credits >= 225000) return 12;
+  if (credits >= 100000) return 6;
+  if (credits >= 35000) return 3;
   return 1;
 }
 
@@ -234,9 +234,9 @@ export function Pricing() {
                   {/* Slider */}
                   <input
                     type="range"
-                    min="1000"
-                    max="22500"
-                    step="100"
+                    min="10000"
+                    max="225000"
+                    step="1000"
                     value={selectedCredits}
                     onChange={handleSliderChange}
                     className="w-full h-2 bg-border rounded-lg appearance-none cursor-pointer accent-accent mb-8"

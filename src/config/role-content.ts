@@ -67,7 +67,7 @@ export const roleContentMap: Record<UserRole, RoleContent> = {
     },
     pricing: {
       emphasis: "Cost per qualified lead",
-      recommendedTier: 10000,
+      recommendedTier: 100000,
     },
     scenarios: {
       costBreakdown: [
@@ -99,7 +99,7 @@ export const roleContentMap: Record<UserRole, RoleContent> = {
     },
     pricing: {
       emphasis: "Cost per active job opening",
-      recommendedTier: 10000,
+      recommendedTier: 100000,
     },
     scenarios: {
       costBreakdown: ["series-a-saas-5000"],
@@ -127,7 +127,7 @@ export const roleContentMap: Record<UserRole, RoleContent> = {
     },
     pricing: {
       emphasis: "Cost per target account",
-      recommendedTier: 10000,
+      recommendedTier: 100000,
     },
     scenarios: {
       costBreakdown: ["expansion-news-2000", "series-a-saas-5000"],
